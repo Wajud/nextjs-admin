@@ -1,8 +1,11 @@
 import React from "react";
 import styles from "@/app/ui/dashboard/users/singleUser/singleUser.module.css";
 import Image from "next/image";
-
-const SingleUserPage = () => {
+import { fetchUser } from "@/app/lib/data";
+const SingleUserPage = async ({ params }) => {
+  const id = params.id;
+  const user = await fetchUser(id);
+  console.log(user);
   return (
     <div className={styles.container}>
       <div className={styles.infoContainer}>
@@ -14,9 +17,9 @@ const SingleUserPage = () => {
       <div className={styles.formContainer}>
         <form action="" className={styles.form}>
           <label>Username</label>
-          <input type="text" name="username" placeholder="John Doe" />
+          <input type="text" name="username" placeholder={user.username} />
           <label>Email</label>
-          <input type="email" name="email" placeholder="JohnDoe@gmail.com" />
+          <input type="email" name="email" placeholder={user.email} />
           <label>Password</label>
           <input type="password" name="password" />
           <label>Phone</label>
