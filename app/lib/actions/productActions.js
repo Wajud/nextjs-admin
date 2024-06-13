@@ -23,6 +23,32 @@ export const addProduct = async (formData) => {
   redirect("/dashboard/products");
 };
 
+export const updateProduct = async (formData) => {
+  const { id, title, desc, price, stock, color, size } =
+    Object.fromEntries(formData);
+
+  try {
+    connectToDB();
+
+    const currentProduct = await Product.findById(id);
+
+    const updatedProduct = { title, desc, price, stock, color, size };
+
+    Object.keys(updatedProduct).forEach((key) => {
+      if (updatedProduct[key] === "" || undefined) {
+        updatedProduct[key] = currentProduct[key];
+      }
+    });
+
+    await Product.findByIdAndUpdate(id, updatedProduct);
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to create product");
+  }
+  revalidatePath("/dashboard/products");
+  redirect("/dashboard/products");
+};
+
 export const deleteProduct = async (formData) => {
   const { id } = Object.fromEntries(formData);
 
