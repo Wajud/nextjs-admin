@@ -4,6 +4,7 @@ import User from "../models/usersModel";
 import { connectToDB } from "../utils";
 import { redirect } from "next/navigation";
 import bcrypt from "bcrypt";
+import { signIn } from "@/auth";
 
 export const addUser = async (formData) => {
   const { username, email, password, phone, address, isAdmin, isActive } =
@@ -79,4 +80,16 @@ export const deleteUser = async (formData) => {
     throw new Error("Failed to create user");
   }
   revalidatePath("/dashboard/users");
+};
+
+export const authenticate = async (formData) => {
+  const { username, password } = Object.fromEntries(formData);
+
+  try {
+    const response = await signIn("credentials", { username, password });
+    return response;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
 };
